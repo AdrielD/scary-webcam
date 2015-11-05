@@ -1,3 +1,4 @@
+var bla;
 (function() {
 	var width = 400;
 	var height = width / (4 / 3);
@@ -96,10 +97,12 @@
 					image: img
 				},
 				dataType: 'json'
-			}).success(function(data) {
-				console.log("hey! " + JSON.stringify(data));
+			}).success(function(result) {
+				console.log("hey! " + JSON.stringify(result));
 				var fb = document.getElementById("fb");
-				fb.setAttribute("data-href", data.link);
+				bla = result;
+				fb.setAttribute("data-href", result.data.link);
+				console.log(result.data.link);
 				fb.style.display = "block";
 			}).error(function(error) {
 				console.log("vish... " + JSON.stringify(error));
