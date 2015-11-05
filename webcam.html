@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<script src="webcam.js"></script>
+	</head>
+	<body style="margin: 0 auto; padding: 0;">
+		
+		<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v2.5";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>
+
+		<div id="peca" style="width: 1200px; height: 400px; margin: 50px auto 0; text-align: center; border: 1px solid #000;">
+			<div class="camera" style="width: 400px; text-align: center; margin: 30px auto 0;">
+		   		<video id="video" autoplay="true" style="display: block;">Video stream not available.</video>
+					<canvas id="canvas" style="display: none;">Canvas not supported.</canvas>
+		   		<img id="photo" style="display: none;">
+			</div>
+			
+		 	<button id="button" style="display: block; margin: 0 auto;">Take photo</button>
+		 	<button id="button2" style="display: none; margin: 0 auto;">Try again</button>
+
+		 	<div id="fb" class="fb-share-button" data-href="" data-layout="button"></div>
+		</div>
+	</body>
+</html>
