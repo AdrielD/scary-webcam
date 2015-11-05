@@ -102,7 +102,9 @@ var bla;
 				var fb = document.getElementById("fb");
 				bla = result;
 				fb.setAttribute("data-href", result.data.link);
+				FB.XFBML.parse(document.getElementById('fb-share-button'));
 				console.log(result.data.link);
+				console.log(fb);
 				fb.style.display = "block";
 			}).error(function(error) {
 				console.log("vish... " + JSON.stringify(error));
