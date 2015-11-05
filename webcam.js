@@ -1,6 +1,6 @@
 (function() {
 	var width = 400;
-	var height = width / (4 / 3)	;
+	var height = width / (4 / 3);
 	var streaming = false;
 	var video;
 	var canvas;
@@ -43,7 +43,7 @@
 
 		function handleVideo(stream) {
 			console.log("streaming...");
-      		video.src = window.URL.createObjectURL(stream);
+			video.src = window.URL.createObjectURL(stream);
 		}
 
 		function takePicture() {
@@ -56,21 +56,54 @@
 			context.drawImage(frame, 0, 0, width, height);
 
 			var data = canvas.toDataURL('image/png');
-   			photo.setAttribute('src', data);
-   			var fb = document.getElementById("fb");
-   			fb.setAttribute("data-href", data);
+			var img = data.replace(/^data:image\/(png|jpg);base64,/, "");
+			// console.log(data);
+			// console.log(img);
+			photo.setAttribute('src', data);
 
-   			video.style.display = "none";
-   			photo.style.display = "block";
-   			button.style.display = "none";
-   			button2.style.display = "block";
+			saveAndShare(img);
+			// var fb = document.getElementById("fb");
+			// fb.setAttribute("data-href", data);
+
+			video.style.display = "none";
+			photo.style.display = "block";
+			button.style.display = "none";
+			button2.style.display = "block";
 		}
 
 		function tryAgain() {
 			video.style.display = "block";
-   			photo.style.display = "none";
-   			button.style.display = "block";
-   			button2.style.display = "none";
+			photo.style.display = "none";
+			button.style.display = "block";
+			button2.style.display = "none";
+			fb.style.display = "none";
+		}
+
+		function saveAndShare(img) {
+			console.log("posting...");
+
+			$.ajax({
+				url: 'https://api.imgur.com/3/image',
+				type: 'POST',
+				headers: {
+					Authorization: 'Client-ID ae206337920ab8c'
+				},
+				data: {
+					type: 'base64',
+					name: 'scary-test.jpg',
+					title: 'Scary Test',
+					description: 'Booohh!!!',
+					image: img
+				},
+				dataType: 'json'
+			}).success(function(data) {
+				console.log("hey! " + JSON.stringify(data));
+				var fb = document.getElementById("fb");
+				fb.setAttribute("data-href", data.link);
+				fb.style.display = "block";
+			}).error(function(error) {
+				console.log("vish... " + JSON.stringify(error));
+			});
 		}
 
 		function clear() {
