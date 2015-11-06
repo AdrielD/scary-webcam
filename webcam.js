@@ -51,20 +51,15 @@ var bla;
 			clear();
 			context.drawImage(video, 0, 0, width, height);
 			context.globalCompositeOperation = "lighter";
-			// context.globalAlpha = 0.4;
 			context.drawImage(mask, 40, height/4, width/3, height/2);
 			context.globalCompositeOperation = "multiply";
 			context.drawImage(frame, 0, 0, width, height);
 
 			var data = canvas.toDataURL('image/png');
 			var img = data.replace(/^data:image\/(png|jpg);base64,/, "");
-			// console.log(data);
-			// console.log(img);
 			photo.setAttribute('src', data);
 
 			saveAndShare(img);
-			// var fb = document.getElementById("fb");
-			// fb.setAttribute("data-href", data);
 
 			video.style.display = "none";
 			photo.style.display = "block";
@@ -99,6 +94,11 @@ var bla;
 				dataType: 'json'
 			}).success(function(result) {
 				console.log("hey! " + JSON.stringify(result));
+
+				//// Using the Sharer link
+				// window.open("https://www.facebook.com/sharer/sharer.php?u=" + result.data.link, "facebook", "toolbar=no", "width=500", "height=350");
+				
+				//// Using the API
 				var fb = document.getElementById("fb");
 				bla = result;
 				fb.setAttribute("data-href", result.data.link);
@@ -113,7 +113,6 @@ var bla;
 
 		function clear() {
 			context.globalCompositeOperation = "source-over";
-			// context.globalAlpha = 1;
 			context.fillStyle = "#000";
 			context.fillRect(0, 0, width, height);
 		}
