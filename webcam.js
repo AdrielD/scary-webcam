@@ -1,4 +1,5 @@
 var bla;
+
 (function() {
 	var width = 400;
 	var height = width / (4 / 3);
@@ -9,6 +10,18 @@ var bla;
 	var photo;
 	var button;
 	var mask;
+	var camera;
+
+	var gif = [];
+	var current_image = 0;
+	var interval;
+	var frame_count = 0;
+
+	for(var i = 1; i <= 7; i++) {
+		var img = document.createElement("img");
+		img.src = "fantasma/frame_" + i + ".png";
+		gif.push(img);
+	}
 
 	function start() {
 		video = document.getElementById("video");
@@ -19,7 +32,6 @@ var bla;
 		canvas = document.getElementById("canvas");
 		canvas.width = width;
 		canvas.height = height;
-		canvas.style.backgroundColor = "#000";
 		
 		photo = document.getElementById("photo");
 		photo.width = width;
@@ -45,20 +57,51 @@ var bla;
 		function handleVideo(stream) {
 			console.log("streaming...");
 			video.src = window.URL.createObjectURL(stream);
+
+			video.addEventListener("canplaythrough", function() {
+				animate();
+			})
+
+			// for(var i = 0; i < 7; i++) {
+			// 	console.log(gif[i].src);
+			// }
+		}
+
+		function animate() {
+			interval = setInterval(function() {
+				clear();
+				context.drawImage(video, 0, 0, width, height);
+				context.globalCompositeOperation = "lighter";
+				context.drawImage(gif[current_image], 10, 90, 150, 100);
+				if(frame_count <= 4) {
+					frame_count++;
+				}
+				else {
+					current_image = (current_image + 1) % gif.length;
+					frame_count = 0;
+				}
+			}, 1000/60);
+		}
+
+		function stop() {
+			clearInterval(interval);
 		}
 
 		function takePicture() {
 			clear();
 			context.drawImage(video, 0, 0, width, height);
 			context.globalCompositeOperation = "lighter";
-			context.drawImage(mask, 40, height/4, width/3, height/2);
+			context.drawImage(gif[current_image], 10, 90, 150, 100);
 			context.globalCompositeOperation = "multiply";
+			// context.drawImage(mask, 40, height/4, width/3, height/2);
+			// context.globalCompositeOperation = "multiply";
 			context.drawImage(frame, 0, 0, width, height);
 
 			var data = canvas.toDataURL('image/png');
 			var img = data.replace(/^data:image\/(png|jpg);base64,/, "");
-			photo.setAttribute('src', data);
+			// photo.setAttribute('src', data);
 
+			stop();
 			saveAndShare(img);
 
 			video.style.display = "none";
@@ -73,6 +116,7 @@ var bla;
 			button.style.display = "block";
 			button2.style.display = "none";
 			fb.style.display = "none";
+			animate();
 		}
 
 		function saveAndShare(img) {
@@ -113,8 +157,7 @@ var bla;
 
 		function clear() {
 			context.globalCompositeOperation = "source-over";
-			context.fillStyle = "#000";
-			context.fillRect(0, 0, width, height);
+			context.clearRect(0, 0, canvas.width, canvas.height);
 		}
 
 		button.addEventListener("click", takePicture);
